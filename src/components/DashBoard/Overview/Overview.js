@@ -1,58 +1,62 @@
-import React, { useEffect, useState } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import auth from '../../../firebase.init';
-import Loading from '../../Loading/Loading';
+import React from 'react';
+import { Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from 'recharts';
 
 const Overview = () => {
-  const [headline, setHeadline] = useState([]);
-  const [user, loading, error] = useAuthState(auth);
-
-  useEffect(() => {
-    fetch('https://newsapi.org/v2/everything?q=tesla&from=2022-08-13&sortBy=publishedAt&apiKey=efaf386aa7f84b52a085b397bafbc7b5', {
-      method: 'GET',
-    })
-      .then(res => res.json())
-      .then(data => setHeadline(data))
-  }, [user])
-
-  if (loading) {
-    return <Loading></Loading>
-  }
-  if (error) {
-    console.log(error);
-  }
+  const data = [
+    {
+      name: 'Page A',
+      uv: 4000,
+      pv: 2400,
+      amt: 2400,
+    },
+    {
+      name: 'Page B',
+      uv: 3000,
+      pv: 1398,
+      amt: 2210,
+    },
+    {
+      name: 'Page C',
+      uv: 2000,
+      pv: 9800,
+      amt: 2290,
+    },
+    {
+      name: 'Page D',
+      uv: 2780,
+      pv: 3908,
+      amt: 2000,
+    },
+    {
+      name: 'Page E',
+      uv: 1890,
+      pv: 4800,
+      amt: 2181,
+    },
+    {
+      name: 'Page F',
+      uv: 2390,
+      pv: 3800,
+      amt: 2500,
+    },
+    {
+      name: 'Page G',
+      uv: 3490,
+      pv: 4300,
+      amt: 2100,
+    },
+  ];
   return (
-    <div>
-      <div className="overflow-x-auto">
-        <table className="table w-full text-slate-700 border">
-          <thead style={{ backgroundColor: '#fff' }}>
-            <tr>
-              <th>Id</th>
-              <th>Headline of top news</th>
-              <th className='text-center'>Date</th>
-              <th className='text-center'>Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              headline?.articles?.length===0 ? <Loading></Loading> :
-              headline?.articles?.map((t, index) =>
-                t.length === 0 ? <p className='text-xl py-4 px-4 text-slate-700 font-serif font-semibold'>No Data Found</p> :
-                  <tr key={index}>
-                    <th>{index + 1}</th>
-                    {
-                      t?.title.length > 61 ? <td>{t?.title.slice(0, 60)}...</td> : <td>{t?.title}</td>
-                    }
-
-                    <td className='text-center'>{t?.publishedAt.slice(0, 10)}</td>
-                    <td className='text-center'>{t?.publishedAt.slice(11, 19)}</td>
-                  </tr>
-              )
-            }
-
-          </tbody>
-        </table>
-      </div>
+    <div className='container mx-auto px-2'>
+      <BarChart width={730} height={250} data={data}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Bar dataKey="pv" fill="#8884d8" />
+        <Bar dataKey="uv" fill="#82ca9d" />
+      </BarChart>
     </div>
   );
 };
