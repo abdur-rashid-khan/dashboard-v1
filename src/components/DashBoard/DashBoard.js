@@ -43,7 +43,7 @@ const DashBoard = () => {
 					</div>
 					<div className="drawer-side ">
 						<label htmlFor="open-dashboard-menu" className="drawer-overlay "></label>
-						<ul className="menu p-4 overflow-y-auto w-80 bg-[#f1f1f1] border-r-1 shadow-2xl  text-slate-600 font-semibold" id='slideBar'>
+						<ul className="menu p-4 overflow-y-auto w-80 bg-[#ffffff] border-r border-[#00000018] shadow-2xl  text-slate-600 font-semibold" id='slideBar'>
 							<div className="profile text-center py-8">
 								{
 									user?.photoURL?

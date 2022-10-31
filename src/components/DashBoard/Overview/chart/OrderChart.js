@@ -1,71 +1,115 @@
-import React from 'react';
-import { Cell, Pie, PieChart } from 'recharts';
+import "./chart.css";
+import {
+  PieChart,
+  Pie,
+  Legend,
+  Cell,
+  ResponsiveContainer,
+  Label
+} from "recharts";
+import moment from "moment";
 
-const OrderChart = () => {
-  const data01 = [
-    {
-      "name": "Group A",
-      "value": 400
-    },
-    {
-      "name": "Group B",
-      "value": 300
-    },
-    {
-      "name": "Group C",
-      "value": 300
-    },
-    {
-      "name": "Group D",
-      "value": 200
-    },
-    {
-      "name": "Group E",
-      "value": 278
-    },
-    {
-      "name": "Group F",
-      "value": 189
-    }
-  ];
-  const data02 = [
-    {
-      "name": "Group A",
-      "value": 2400
-    },
-    {
-      "name": "Group B",
-      "value": 4567
-    },
-    {
-      "name": "Group C",
-      "value": 1398
-    },
-    {
-      "name": "Group D",
-      "value": 9800
-    },
-    {
-      "name": "Group E",
-      "value": 3908
-    },
-    {
-      "name": "Group F",
-      "value": 4800
-    }
-  ];
+console.log(
+  moment(1612390027112).startOf("minute").add(1, "minutes").toISOString()
+);
+const data01 = [
+  { name: "Completed", value: 60 },
+  { name: "Panging", value: 25 },
+  { name: "Cancel", value: 15 }
+];
 
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
-
-
+const Bullet = ({ backgroundColor, size }) => {
   return (
-    <div>
-      <PieChart width={530} height={250}>
-        <Pie data={data01} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={50} fill="#8884d8" />
-        <Pie data={data02} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={60} outerRadius={80} fill="#82ca9d" label />
-      </PieChart>
-    </div>
+    <div
+      className="CirecleBullet"
+      style={{
+        backgroundColor,
+        width: size,
+        height: size
+      }}
+    ></div>
   );
 };
 
-export default OrderChart;
+const CustomizedLegend = (props) => {
+  const { payload } = props;
+  return (
+    <ul className="LegendList">
+      {payload.map((entry, index) => (
+        <li key={`item-${index}`}>
+          <div className="BulletLabel">
+            <Bullet backgroundColor={entry.payload.fill} size="10px" />
+            <div className="BulletLabelText">{entry.value}</div>
+          </div>
+          <div style={{ marginLeft: "20px" }}>{entry.payload.value}</div>
+        </li>
+      ))}
+    </ul>
+  );
+}; 
+
+const CustomLabel = ({ viewBox, labelText, value }) => {
+  const { cx, cy } = viewBox;
+  return (
+    <g>
+      <text
+        x={cx}
+        y={cy}
+        className="recharts-text recharts-label"
+        textAnchor="middle"
+        dominantBaseline="central"
+        alignmentBaseline="middle"
+        fontSize="15"
+      >
+        {labelText}
+      </text>
+      <text
+        x={cx}
+        y={cy + 20}
+        className="recharts-text recharts-label"
+        textAnchor="middle"
+        dominantBaseline="central"
+        alignmentBaseline="middle"
+        fill="#0088FE"
+        fontSize="26"
+        fontWeight="600"
+      >
+        {value}
+      </text>
+    </g>
+  );
+};
+
+export default function OrderChart() {
+  return (
+    <div >
+      <ResponsiveContainer width="100%" height={400}>
+        <PieChart>
+          <Pie
+            data={data01}
+            dataKey="value"
+            cx={200}
+            cy={200}
+            innerRadius={80}
+            outerRadius={100}
+          >
+            {data01.map((entry, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+              />
+            ))}
+            <Label
+            // value={15}
+              content={<CustomLabel labelText="Order Summary"  />}
+              position="center"
+            />
+          </Pie>
+          <Legend content={<CustomizedLegend />} />
+        </PieChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
